@@ -1,6 +1,6 @@
 # Custom standing desk
 
-![the_done_deal](img\final-desk.jpg)
+![the_done_deal](img/final-desk.jpg)
 
 ## Background/Motivation
 
@@ -18,11 +18,11 @@ A frame on its own can be quite cheap, I found one for $200, but didn't like the
 - Use turps to wipe in between sanding to both relieve the tediousness of sanding, but also to see what you are doing much better.
 - Don't rush detail sanding after cutting something, you can easily scratch a nice surface and need to then do much more work to redo it.
 
-![masking_tape](img\masking_taping.jpg)
+![masking_tape](img/masking_taping.jpg)
 
 ## Equipment
 
-![tools_materials](img\tools-materials.jpg)
+![tools_materials](img/tools-materials.jpg)
 
 ### Materials
 
