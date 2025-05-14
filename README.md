@@ -2,6 +2,10 @@
 
 Various projects I've done, or plan to do around the house.
 
+| Done | Doing |
+|:----:|:-----:|
+| `/wood_working` | `watch_making` |
+
 ## Overview
 
 This isn't really meant as a step-by-step guide to any of these projects, as I don't want to put the effort in for that. Please feel free to reach out and request more steps (via an issue) if you happen across this repo.
