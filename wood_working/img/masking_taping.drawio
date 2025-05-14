@@ -1,0 +1,47 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36" version="26.1.1">
+  <diagram name="Page-1" id="snpgFBhoQrSbkePwGpWN">
+    <mxGraphModel dx="819" dy="425" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="EBERqsqOzb9j89W-eNRz-1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="90" y="160" width="710" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="EBERqsqOzb9j89W-eNRz-2" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=-0.001;exitY=0.136;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="89.99999999999996" y="170.0000000000001" as="sourcePoint" />
+            <mxPoint x="320.71" y="170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBERqsqOzb9j89W-eNRz-3" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=-0.001;exitY=0.136;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="90" y="400" as="sourcePoint" />
+            <mxPoint x="321" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBERqsqOzb9j89W-eNRz-5" value="Measure" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="EBERqsqOzb9j89W-eNRz-3">
+          <mxGeometry x="-0.103" relative="1" as="geometry">
+            <mxPoint x="6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBERqsqOzb9j89W-eNRz-4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="320" y="160" width="10" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="EBERqsqOzb9j89W-eNRz-7" value="Measure" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="200.00000000000003" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="EBERqsqOzb9j89W-eNRz-8" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=0.345;exitY=-0.002;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.346;entryY=1.006;entryDx=0;entryDy=0;entryPerimeter=0;fillColor=#f8cecc;strokeColor=#b85450;elbow=vertical;" edge="1" parent="1" source="EBERqsqOzb9j89W-eNRz-1" target="EBERqsqOzb9j89W-eNRz-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="410" y="330" as="sourcePoint" />
+            <mxPoint x="460" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EBERqsqOzb9j89W-eNRz-9" value="&lt;font style=&quot;color: light-dark(rgb(184, 84, 80), rgb(237, 237, 237));&quot;&gt;Cut&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="EBERqsqOzb9j89W-eNRz-8">
+          <mxGeometry x="-0.0377" y="-2" relative="1" as="geometry">
+            <mxPoint x="17" y="-11" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
