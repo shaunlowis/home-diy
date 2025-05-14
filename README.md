@@ -4,7 +4,7 @@ Various projects I've done, or plan to do around the house.
 
 | Done | Doing |
 |:----:|:-----:|
-| `/wood_working` | `watch_making` |
+| `./wood_working/standing_desk` | `./watch_making`, `./wood_working/coffee_table` |
 
 ## Overview
 
