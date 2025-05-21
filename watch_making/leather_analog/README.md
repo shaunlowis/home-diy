@@ -10,7 +10,7 @@ So, this sums to:
 
 - I'd like a face that shows the gears.
 - A self winding watch would be great.
-- I prefer a round body.
+- I prefer a round watch case.
 - I prefer a leather strap.
 
 ## Equipment
