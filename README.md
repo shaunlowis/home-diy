@@ -16,4 +16,4 @@ Primarily this is for my own reference, but I'd like it to read as a blog of sor
 
 | Port | Service |
 |:----:|:-------:|
-| 8080 | 
+| 8080 | File Server |
