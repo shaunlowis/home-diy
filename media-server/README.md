@@ -1,6 +1,10 @@
 # Overview
 
-Managed to get an old Zbook working after it refused to boot. Turns out it just needed some new RAM sticks and now purrs away happily. Specs:
+Managed to get an old Zbook working after it refused to boot. It had a damaged screen, so I yanked it out and rewired the wifi card.
+
+![alt text](IMG-20250524-WA0002.jpeg)
+
+Turns out it just needed some new RAM sticks and now purrs away happily. Specs:
 
 ![alt text](image.png)
 
@@ -33,6 +37,8 @@ ping google.com
 
 ## Home server setup
 
+All services shall be added to the base README for my own reference and sanity.
+
 ### File server
 
 I like using docker and the [File Browser](https://filebrowser.org/) project seems nice.
@@ -43,6 +49,8 @@ cd /some/folder/you/want/to/use
 touch filebrowser.db
 mkdir srv # this is the base dir of the web gui
 vim filebrowser.json
+
+# Add below json
 ```
 
 ```json
