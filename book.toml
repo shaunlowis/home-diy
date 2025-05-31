@@ -3,7 +3,7 @@ authors = ["shaunlowis shaunlowis@gmail.com"]
 language = "zh"
 multilingual = false
 src = "src"
-title = "Shaun's Home DIY"
+title = "book-name"
 
 [preprocessor.theme]
 pagetoc = false
