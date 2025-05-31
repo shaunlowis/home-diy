@@ -1,5 +1,7 @@
 # home-diy
 
+See site: https://shaunlowis.github.io/home-diy/
+
 Various projects I've done, or plan to do around the house.
 
 See `/src` for markdown files.
