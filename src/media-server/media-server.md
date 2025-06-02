@@ -8,7 +8,15 @@ Turns out it just needed some new RAM sticks and now purrs away happily. Specs:
 
 ![alt text](image.png)
 
-## Debugging
+## Home server setup
+
+All services shall be added to the base README for my own reference and sanity.
+
+I might move these to a different git repo, so I can backup my docker files there..
+
+### Networking
+
+#### DNS setup
 
 For some reason, my local network seems to use some seriously cooked DNS configs. Had to manually change to Google DNS:
 
@@ -35,9 +43,52 @@ sudo systemctl restart systemd-resolved
 ping google.com
 ```
 
-## Home server setup
+#### Static IP
 
-All services shall be added to the base README for my own reference and sanity.
+Quite useful for not having to juggle IP's after reboots. My network is managed, so I can only wiggle around a specific range. Check the name of your connection with:
+
+```bash
+nmcli device show wlp0s20f3 | grep 'GENERAL.CONNECTION'
+
+# Assuming output looks like:
+GENERAL.CONNECTION:                     BIGCHEESE
+
+# Then modify to a suitable static IP with:
+nmcli connection modify "BIGCHEESE" \
+  ipv4.addresses 192.111.11.200/24 \
+  ipv4.gateway 192.111.11.1 \
+  ipv4.dns "1.1.1.1 8.8.8.8" \
+  ipv4.method manual
+
+sudo nmcli connection down "BIGCHEESE" && sudo nmcli connection up "BIGCHEESE"
+```
+
+Then after a few seconds, you should see a nice new static IP with:
+
+```bash
+ip -c -h address
+```
+
+#### Samba server
+
+I found that my GUI is sometimes useful, but having a mounted mediashare is nicer for windows --> linux file sharing.
+[This guide](https://ubuntu.com/tutorials/install-and-configure-samba#1-overview) is the best one I found online. I just used my own user
+as a new samba user, that way I didn't have to deal with extra permissions BS. Probably not very secure though, but for a local setup it should
+be fine.
+
+Then, make sure to mount it on a windows machine by:
+
+1. Open File Explorer
+2. Right-click on This PC → Map network drive
+3. Choose a drive letter (e.g., Z:)
+4. In the folder box, enter your Samba share path:
+    - Copy
+    - Edit
+    - \\IP-ADDRESS\sharename
+    - Check the box for "Connect using different credentials"
+5. Hit Finish
+
+Don't mount it by putting the fileshare address in the network bar, it won't work. At least not for me.
 
 ### File server
 
