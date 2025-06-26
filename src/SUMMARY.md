@@ -10,9 +10,11 @@
 
 - [Hardware, watchmaking: leather analog watch](watch_making/leather_analog/watch-making.md)
 
----
-
 # Software
 
-- [Software, home media server](media-server/media-server.md)
+- [Software, home media server](media_server/media-server.md)
 - [Software, weather station](weather_station/weather-station.md)
+
+# 3D Printing
+
+- [3D printer, upgrades](3d_printing/3d-printing.md)
