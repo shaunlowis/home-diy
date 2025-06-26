@@ -1,5 +1,3 @@
-# Summary
-
 # Wood working
 
 - [Hardware, woodworking: standing desk](wood_working/standing_desk/standing-desk.md)

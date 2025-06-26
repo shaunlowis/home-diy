@@ -1,9 +1,9 @@
 [book]
-authors = ["shaunlowis shaunlowis@gmail.com"]
+authors = ["shaunlowis <shaunlowis@gmail.com>"]
 language = "zh"
 multilingual = false
 src = "src"
-title = "Home DIY"
+title = "book-name"
 
 [preprocessor.theme]
 pagetoc = false
@@ -14,9 +14,10 @@ sidebar-width = "250px"
 
 [output.html]
 default-theme = "ayu"
-git-repository-url = ""
+git-repository-url = "https://github.com/shaunlowis/home-diy"
 additional-css = ["theme/pagetoc.css"]
 additional-js = ["theme/pagetoc.js"]
+site-url = "home-diy"
 
 [output.html.fold]
 enable = false
