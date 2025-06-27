@@ -18,6 +18,7 @@ git-repository-url = "https://github.com/shaunlowis/home-diy"
 additional-css = ["theme/pagetoc.css"]
 additional-js = ["theme/pagetoc.js"]
 site-url = "/home-diy/"
+logo = "src/home-diy-logo.png"
 
 [output.html.fold]
 enable = false
