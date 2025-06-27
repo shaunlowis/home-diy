@@ -17,7 +17,7 @@ default-theme = "ayu"
 git-repository-url = "https://github.com/shaunlowis/home-diy"
 additional-css = ["theme/pagetoc.css"]
 additional-js = ["theme/pagetoc.js"]
-site-url = "home-diy"
+site-url = "/home-diy/"
 
 [output.html.fold]
 enable = false
