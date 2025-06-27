@@ -10,9 +10,136 @@ Turns out it just needed some new RAM sticks and now purrs away happily. Specs:
 
 ## Home server setup
 
-All services shall be added to the base README for my own reference and sanity.
+I fell in love with the [Glance dashboard](https://github.com/glanceapp/glance). This is a great way to keep track of all of your services and even external websites.
 
-I might move these to a different git repo, so I can backup my docker files there..
+![alt text](image-1.png)
+
+An abridged version of the `.yml` I use and my file structure is:
+
+```bash
+$ tree
+.
+├── assets
+│   ├── file-browser-logo.png
+│   ├── immich-logo.png
+│   ├── jellyfin-logo.png
+│   ├── octoprint-logo.png
+│   ├── rocket.svg
+│   └── user.css
+├── config
+│   ├── glance.yml
+│   └── minimal.yml
+└── docker-compose.yml
+```
+
+`config/glance.yml`:
+
+```yml
+server:
+  assets-path: /app/assets
+
+theme:
+  # Note: assets are cached by the browser, changes to the CSS file
+  # will not be reflected until the browser cache is cleared (Ctrl+F5)
+  custom-css-file: /assets/user.css
+  background-color: 50 1 6
+  primary-color: 24 97 58
+  negative-color: 209 88 54
+
+pages:
+  # It's not necessary to create a new file for each page and include it, you can simply
+  # put its contents here, though multiple pages are easier to manage when separated
+  - $include: minimal.yml
+```
+
+`config/minimal.tml`
+
+```yml
+- name: Minimal
+  # Optionally, if you only have a single page you can hide the desktop navigation for a cleaner look
+  # hide-desktop-navigation: true
+  columns:
+    - size: small
+      widgets:
+        - type: calendar
+          first-day-of-week: monday
+
+        - type: monitor
+          cache: 1m
+          title: Mediabox
+          sites:
+            - title: Jellyfin
+              url: http://your-ip-goes-here
+              icon: /assets/jellyfin-logo.png
+              allow-insecure: true
+
+            - title: File Browser
+              url: http://your-ip-goes-here
+              icon: /assets/file-browser-logo.png
+              allow-insecure: true
+
+            - title: Immich
+              url: http://your-ip-goes-here
+              icon: /assets/immich-logo.png
+              allow-insecure: true
+
+            - title: OctoPrint
+              url: http://your-ip-goes-here
+              icon: /assets/octoprint-logo.png
+              allow-insecure: true
+
+            - title: My website
+              url: https://shaunlowis.com
+              icon: /assets/rocket.svg
+
+    - size: full
+      widgets:
+        - type: search
+          search-engine: duckduckgo
+          new-tab: true
+          bangs:
+            - title: YouTube
+              shortcut: "!yt"
+              url: https://www.youtube.com/results?search_query={QUERY}
+
+        - type: videos
+          channels:
+            - UCPkaARl89RCckNE_D7tj-aA # Gorgc
+            - UC5Ghe5TBQGYIOANuiNW4hDQ # Gary's Economics
+            - UCxzC4EngIsMrPmbm6Nxvb-A # Scott Manley
+            - UCaYLBJfw6d8XqmNlL204lNg # ESL Dota 2
+
+        - type: markets
+          markets:
+            - symbol: BTC-USD
+              name: Bitcoin
+            - symbol: AMD
+              name: AMD
+            - symbol: MSFT
+              name: Microsoft
+            - symbol: NVDA
+              name: NVIDIA
+            - symbol: NZG
+              name: Smart S&P/NZX 50
+            - symbol: TSM
+              name: TSMC
+
+    - size: small
+      widgets:
+        - type: weather
+          location: Auckland, New Zealand
+          units: metric # alternatively "imperial"
+          hour-format: 12h # alternatively "24h"
+          # Optionally hide the location from being displayed in the widget
+          # hide-location: true
+
+        - type: docker-containers
+          hide-by-default: false
+```
+
+Then I also added this page as my default page when I open my Brave browser:
+
+Settings -> Get started -> On startup -> Open a specific page or set of pages.
 
 ### Networking
 
