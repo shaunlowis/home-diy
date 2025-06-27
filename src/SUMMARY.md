@@ -1,3 +1,6 @@
+# Summary
+For the various projects I tinker with. Mostly for my own reference and lessons learned.
+
 # Wood working
 
 - [Hardware, woodworking: standing desk](wood_working/standing_desk/standing-desk.md)
