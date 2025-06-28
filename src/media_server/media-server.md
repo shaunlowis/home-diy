@@ -199,9 +199,39 @@ ip -c -h address
 #### Samba server
 
 I found that my GUI is sometimes useful, but having a mounted mediashare is nicer for windows --> linux file sharing.
-[This guide](https://ubuntu.com/tutorials/install-and-configure-samba#1-overview) is the best one I found online. I just used my own user
-as a new samba user, that way I didn't have to deal with extra permissions BS. Probably not very secure though, but for a local setup it should
-be fine.
+[This guide](https://ubuntu.com/tutorials/install-and-configure-samba#1-overview) is the best one I found online.
+
+Example samba config:
+
+```conf
+[mediashare]
+    comment = Mediabox File Share
+    path = /home/mediabox/media_folder
+    browsable = yes
+    read only = no
+    valid users = mediabox
+    create mask = 0664
+    directory mask = 0775
+```
+
+For me this is an external drive connected over USB, so I also have an fstab entry:
+
+```fstab
+# 2TB hDD
+UUID="98e6a5d9-5787-4d82-843d-f25cb4ea95e8"  /home/mediabox/media_folder  ext4  defaults,nofail,x-systemd.automount  0 2
+```
+
+This required some permissions changes, to the above mediabox user:
+
+```bash
+sudo chown -R mediabox:mediabox /home/mediabox/media_folder
+```
+
+You can check your smb config with:
+
+```bash
+testparm -s
+```
 
 Then, make sure to mount it on a windows machine by:
 
