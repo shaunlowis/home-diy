@@ -1,15 +1,22 @@
 # Specs
 
-Ender 3 v3 SE
+Ender 3 v3 SE, before:
 
 ![alt text](20250628_103814.jpg)
+
+After:
+
+![after](20250713_164002.jpg)
 
 [Printables profile](https://www.printables.com/@slowis_3350734)
 
 ## Printing setup
 
 I set up Orcaslicer, with octoprint running on a raspberry pi. The in-app integration works super well.
-I found a really good profile with a lot of configs for kiwifil, which is my preferred filament brand.
+Additionally, I installed tailscale on the rpi and my phone, which is a super easy way to access the printer remotely.
+Just make sure to choose a secure password.
+
+![alt text](20250713_170240.jpg)
 
 ### Software links
 
@@ -49,9 +56,9 @@ Your octoprint won't look like this out of the box. Here's a few plugins that I 
 These are mainly just quality of life. Though I live in a very humid area, so the filament dryer is more essential than it may be for others.
 
 - Filament dryer: [Sunlu](https://www.sunlu.com/products/sunlu-s1-and-s1-plus-filament-dryer-keeping-filament-dry-during-3d-printing).
-- Print bed: [PEI/PEO](https://www.aliexpress.com/item/1005006595326667.html?src=google&snps=y&snpsid=1&src=google&albch=shopping&acnt=742-864-1166&isdl=y&slnk=&plac=&mtctp=&albbt=Google_7_shopping&aff_platform=google&aff_short_key=UneMJZVf&&albagn=888888&&ds_e_adid=&ds_e_matchtype=&ds_e_device=c&ds_e_network=x&ds_e_product_group_id=&ds_e_product_id=en1005006595326667&ds_e_product_merchant_id=5337445091&ds_e_product_country=NZ&ds_e_product_language=en&ds_e_product_channel=online&ds_e_product_store_id=&ds_url_v=2&albcp=22492609087&albag=&isSmbAutoCall=false&needSmbHouyi=false&gad_campaignid=22482571098)
+- Filament feed system setup: [thingiverse page](https://www.thingiverse.com/thing:6210632).
+- Print bed: [PEI/PEO](https://www.aliexpress.com/item/1005006595326667.html?src=google&snps=y&snpsid=1&src=google&albch=shopping&acnt=742-864-1166&isdl=y&slnk=&plac=&mtctp=&albbt=Google_7_shopping&aff_platform=google&aff_short_key=UneMJZVf&&albagn=888888&&ds_e_adid=&ds_e_matchtype=&ds_e_device=c&ds_e_network=x&ds_e_product_group_id=&ds_e_product_id=en1005006595326667&ds_e_product_merchant_id=5337445091&ds_e_product_country=NZ&ds_e_product_language=en&ds_e_product_channel=online&ds_e_product_store_id=&ds_url_v=2&albcp=22492609087&albag=&isSmbAutoCall=false&needSmbHouyi=false&gad_campaignid=22482571098).
 
 To do:
 
-- Filament feed system setup: [thingiverse page](https://www.thingiverse.com/thing:6210632)
 - Noctua fan install: [reddit guide](https://www.reddit.com/r/Ender3V3SE/comments/1949xsc/creality_ender3_v3_se_fan_upgrade_replace_20mm/).
