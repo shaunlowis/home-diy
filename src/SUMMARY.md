@@ -6,11 +6,12 @@
 
 - [Hardware, woodworking: standing desk](wood_working/standing_desk/standing-desk.md)
 - [Hardware, woodworking: coffee table](wood_working/coffee_table/coffee-table.md)
-- [Hardware, woodworking: bedside table](wood_working/bedside_table/bedside-table.md)
 
 # Software
 
 - [Software, home media server](media_server/media-server.md)
+- [Software, local LLM](local_llm/local-llm.md)
+- [Software, local overleaf](local_overleaf/local_overleaf.md)
 - [Electronics, custom router](router_wiring/router-wiring.md)
 
 # 3D Printing
