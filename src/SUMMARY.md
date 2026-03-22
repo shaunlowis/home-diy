@@ -11,7 +11,7 @@
 
 - [Software, home media server](media_server/media-server.md)
 - [Software, local LLM](local_llm/local-llm.md)
-- [Software, local overleaf](local_overleaf/local_overleaf.md)
+- [Software, local overleaf](local_overleaf/local-overleaf.md)
 - [Electronics, custom router](router_wiring/router-wiring.md)
 
 # 3D Printing
