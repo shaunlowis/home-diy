@@ -63,3 +63,11 @@ volumes:
 ## Usage
 
 This turned out pretty great! Run your docker compose then check port 8080 on whatever host this is on.
+
+## Preview
+
+PLEASE NOTE THAT HIS NAME IS A PORTMANTEU OF BOT AND BUTLER. Not any other combination of words.
+
+Here's what it looks like (I wanted to feel like batman):
+
+![alt text](image.png)
