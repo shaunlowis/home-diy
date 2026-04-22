@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nitrogen Cycle Tracker</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #080f1c;
+    --bg2:       #0d1a2e;
+    --bg3:       #111f38;
+    --border:    rgba(100,180,255,0.1);
+    --text:      #d6eaff;
+    --muted:     #5a8ab0;
+    --ammonia:   #ff6b6b;
+    --nitrite:   #ffd166;
+    --nitrate:   #06d6a0;
+    --ph:        #a78bfa;
+    --card-bg:   rgba(255,255,255,0.03);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Playfair Display', Georgia, serif;
+    min-height: 100vh;
+    padding: 40px 20px 60px;
+  }
+
+  /* ── Header ── */
+  header {
+    text-align: center;
+    margin-bottom: 44px;
+  }
+  header .icon { font-size: 38px; display: block; margin-bottom: 10px; }
+  header h1 {
+    font-size: clamp(20px, 3.5vw, 28px);
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #e8f4ff;
+    margin-bottom: 6px;
+  }
+  header p {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+
+  /* ── Layout ── */
+  .wrap { max-width: 900px; margin: 0 auto; }
+
+  /* ── Phase banner ── */
+  #phase-banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 22px;
+    margin-bottom: 28px;
+    transition: border-color 0.4s;
+  }
+  #phase-icon { font-size: 26px; flex-shrink: 0; }
+  #phase-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 3px;
+  }
+  #phase-text { font-size: 15px; color: #e8f4ff; }
+
+  /* ── Chart card ── */
+  .chart-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .chart-card h2 {
+    font-size: 13px;
+    font-weight: 400;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  .chart-wrap { position: relative; height: 260px; }
+
+  /* ── Legend pills ── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .legend-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.05em;
+  }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── Entry form ── */
+  .form-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .form-card h2 {
+    font-size: 13px;
+    font-weight: 400;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .field label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .field.ammonia label { color: var(--ammonia); }
+  .field.nitrite  label { color: var(--nitrite);  }
+  .field.nitrate  label { color: var(--nitrate);  }
+  .field.ph       label { color: var(--ph);       }
+  .field.date     label { color: var(--muted);    }
+
+  .field input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+  .field input:focus { border-color: rgba(100,180,255,0.35); }
+  .field input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.5); }
+
+  .form-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  button {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.07em;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  button:hover { opacity: 0.85; transform: translateY(-1px); }
+  button:active { transform: translateY(0); }
+
+  #btn-add {
+    background: linear-gradient(135deg, #2a6fa8, #1a4f7a);
+    color: #e8f4ff;
+    border: 1px solid rgba(100,180,255,0.3);
+  }
+  #btn-clear {
+    background: rgba(255,255,255,0.05);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  /* ── Log table ── */
+  .log-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    overflow-x: auto;
+  }
+  .log-card h2 {
+    font-size: 13px;
+    font-weight: 400;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  th {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    letter-spacing: 0.07em;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(100,180,255,0.05);
+    color: var(--text);
+    white-space: nowrap;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  td.ammonia { color: var(--ammonia); }
+  td.nitrite  { color: var(--nitrite); }
+  td.nitrate  { color: var(--nitrate); }
+  td.ph       { color: var(--ph); }
+
+  .btn-del {
+    background: none;
+    border: none;
+    color: rgba(255,100,100,0.4);
+    padding: 2px 6px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .btn-del:hover { color: rgba(255,100,100,0.9); transform: none; }
+
+  #empty-state {
+    text-align: center;
+    padding: 32px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Ideal range guide ── */
+  .guide {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .guide-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    border-left: 3px solid var(--c);
+  }
+  .guide-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c);
+    margin-bottom: 4px;
+  }
+  .guide-range {
+    font-size: 14px;
+    color: #e8f4ff;
+  }
+  .guide-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .wrap > * { animation: fadeUp 0.5s ease both; }
+  .wrap > *:nth-child(1) { animation-delay: 0.05s; }
+  .wrap > *:nth-child(2) { animation-delay: 0.10s; }
+  .wrap > *:nth-child(3) { animation-delay: 0.15s; }
+  .wrap > *:nth-child(4) { animation-delay: 0.20s; }
+  .wrap > *:nth-child(5) { animation-delay: 0.25s; }
+  .wrap > *:nth-child(6) { animation-delay: 0.30s; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="icon">🔬</span>
+  <h1>Nitrogen Cycle Tracker</h1>
+  <p>Log your water readings and watch the cycle unfold</p>
+</header>
+
+<div class="wrap">
+
+  <!-- Phase indicator -->
+  <div id="phase-banner">
+    <span id="phase-icon">💧</span>
+    <div>
+      <div id="phase-label">Current phase</div>
+      <div id="phase-text">Add your first reading to begin tracking</div>
+    </div>
+  </div>
+
+  <!-- Ideal ranges guide -->
+  <div class="guide">
+    <div class="guide-item" style="--c: var(--ammonia)">
+      <div class="guide-name">Ammonia (NH₃)</div>
+      <div class="guide-range">Target: 0 ppm</div>
+      <div class="guide-note">Spikes first, then crashes</div>
+    </div>
+    <div class="guide-item" style="--c: var(--nitrite)">
+      <div class="guide-name">Nitrite (NO₂)</div>
+      <div class="guide-range">Target: 0 ppm</div>
+      <div class="guide-note">Lags ammonia, then crashes</div>
+    </div>
+    <div class="guide-item" style="--c: var(--nitrate)">
+      <div class="guide-name">Nitrate (NO₃)</div>
+      <div class="guide-range">Target: &lt;20 ppm</div>
+      <div class="guide-note">Climbs slowly — do water changes</div>
+    </div>
+    <div class="guide-item" style="--c: var(--ph)">
+      <div class="guide-name">pH</div>
+      <div class="guide-range">Target: 6.8 – 7.4</div>
+      <div class="guide-note">Betta ideal range</div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="chart-card">
+    <h2>Nitrogen Cycle — NH₃ · NO₂ · NO₃ (ppm)</h2>
+    <div class="chart-wrap">
+      <canvas id="cycle-chart"></canvas>
+    </div>
+    <div class="legend">
+      <div class="legend-pill" style="background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.3)">
+        <span class="legend-dot" style="background:var(--ammonia)"></span> Ammonia
+      </div>
+      <div class="legend-pill" style="background:rgba(255,209,102,0.1);border:1px solid rgba(255,209,102,0.3)">
+        <span class="legend-dot" style="background:var(--nitrite)"></span> Nitrite
+      </div>
+      <div class="legend-pill" style="background:rgba(6,214,160,0.1);border:1px solid rgba(6,214,160,0.3)">
+        <span class="legend-dot" style="background:var(--nitrate)"></span> Nitrate
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <h2>pH</h2>
+    <div class="chart-wrap">
+      <canvas id="ph-chart"></canvas>
+    </div>
+  </div>
+
+  <!-- Entry form -->
+  <div class="form-card">
+    <h2>Log a Reading</h2>
+    <div class="form-grid">
+      <div class="field date">
+        <label>Date</label>
+        <input type="date" id="f-date" />
+      </div>
+      <div class="field ammonia">
+        <label>Ammonia (ppm)</label>
+        <input type="number" id="f-ammonia" min="0" max="8" step="0.25" placeholder="e.g. 0.25" />
+      </div>
+      <div class="field nitrite">
+        <label>Nitrite (ppm)</label>
+        <input type="number" id="f-nitrite" min="0" max="5" step="0.25" placeholder="e.g. 0.5" />
+      </div>
+      <div class="field nitrate">
+        <label>Nitrate (ppm)</label>
+        <input type="number" id="f-nitrate" min="0" max="160" step="1" placeholder="e.g. 5" />
+      </div>
+      <div class="field ph">
+        <label>pH</label>
+        <input type="number" id="f-ph" min="5" max="9" step="0.1" placeholder="e.g. 7.2" />
+      </div>
+    </div>
+    <div class="form-actions">
+      <button id="btn-add">＋ Add Reading</button>
+      <button id="btn-clear">Clear All Data</button>
+    </div>
+  </div>
+
+  <!-- Log table -->
+  <div class="log-card">
+    <h2>Reading Log</h2>
+    <div id="table-wrap"></div>
+  </div>
+
+</div>
+
+<script>
+// ── Storage ──────────────────────────────────────────────
+const STORAGE_KEY = 'betta_water_log';
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
+}
+function save(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+let readings = load();
+
+// ── Chart setup ──────────────────────────────────────────
+const gridColor = 'rgba(100,180,255,0.07)';
+const tickColor = '#3a6a9a';
+
+const sharedOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  interaction: { mode: 'index', intersect: false },
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      backgroundColor: '#0d1a2e',
+      borderColor: 'rgba(100,180,255,0.2)',
+      borderWidth: 1,
+      titleColor: '#5a8ab0',
+      bodyColor: '#d6eaff',
+      titleFont: { family: 'JetBrains Mono', size: 11 },
+      bodyFont: { family: 'JetBrains Mono', size: 12 },
+      padding: 12,
+    }
+  },
+  scales: {
+    x: {
+      grid: { color: gridColor },
+      ticks: { color: tickColor, font: { family: 'JetBrains Mono', size: 10 } },
+    },
+    y: {
+      grid: { color: gridColor },
+      ticks: { color: tickColor, font: { family: 'JetBrains Mono', size: 10 } },
+      beginAtZero: true,
+    }
+  }
+};
+
+function makeGradient(ctx, color) {
+  const g = ctx.createLinearGradient(0, 0, 0, 260);
+  g.addColorStop(0, color + '55');
+  g.addColorStop(1, color + '00');
+  return g;
+}
+
+const cycleCtx = document.getElementById('cycle-chart').getContext('2d');
+const cycleChart = new Chart(cycleCtx, {
+  type: 'line',
+  data: { labels: [], datasets: [
+    {
+      label: 'Ammonia', data: [],
+      borderColor: '#ff6b6b', borderWidth: 2, pointRadius: 4,
+      pointBackgroundColor: '#ff6b6b', pointBorderColor: '#080f1c', pointBorderWidth: 2,
+      backgroundColor: makeGradient(cycleCtx, '#ff6b6b'),
+      fill: true, tension: 0.35,
+    },
+    {
+      label: 'Nitrite', data: [],
+      borderColor: '#ffd166', borderWidth: 2, pointRadius: 4,
+      pointBackgroundColor: '#ffd166', pointBorderColor: '#080f1c', pointBorderWidth: 2,
+      backgroundColor: makeGradient(cycleCtx, '#ffd166'),
+      fill: true, tension: 0.35,
+    },
+    {
+      label: 'Nitrate', data: [],
+      borderColor: '#06d6a0', borderWidth: 2, pointRadius: 4,
+      pointBackgroundColor: '#06d6a0', pointBorderColor: '#080f1c', pointBorderWidth: 2,
+      backgroundColor: makeGradient(cycleCtx, '#06d6a0'),
+      fill: true, tension: 0.35,
+    },
+  ]},
+  options: { ...sharedOptions }
+});
+
+const phCtx = document.getElementById('ph-chart').getContext('2d');
+const phChart = new Chart(phCtx, {
+  type: 'line',
+  data: { labels: [], datasets: [
+    {
+      label: 'pH', data: [],
+      borderColor: '#a78bfa', borderWidth: 2, pointRadius: 4,
+      pointBackgroundColor: '#a78bfa', pointBorderColor: '#080f1c', pointBorderWidth: 2,
+      backgroundColor: makeGradient(phCtx, '#a78bfa'),
+      fill: true, tension: 0.35,
+    }
+  ]},
+  options: {
+    ...sharedOptions,
+    scales: {
+      ...sharedOptions.scales,
+      y: {
+        ...sharedOptions.scales.y,
+        min: 6.0, max: 8.5,
+        ticks: { ...sharedOptions.scales.y.ticks, stepSize: 0.5 },
+      }
+    },
+    plugins: {
+      ...sharedOptions.plugins,
+      annotation: undefined,
+    }
+  }
+});
+
+// ── Phase detection ───────────────────────────────────────
+function detectPhase(readings) {
+  if (!readings.length) return { icon: '💧', text: 'Add your first reading to begin tracking' };
+
+  const last = readings[readings.length - 1];
+  const nh3 = parseFloat(last.ammonia);
+  const no2 = parseFloat(last.nitrite);
+  const no3 = parseFloat(last.nitrate);
+
+  if (nh3 === 0 && no2 === 0 && no3 > 0) {
+    return { icon: '🐠', text: 'Cycle complete! Ammonia & nitrite at 0. Your tank is ready for fish!', color: '#06d6a0' };
+  }
+  if (no2 > 0 && nh3 < no2) {
+    return { icon: '⚗️', text: 'Nitrite spike in progress — bacteria converting NH₃ → NO₂ → NO₃. Stay patient!', color: '#ffd166' };
+  }
+  if (nh3 > 0 && no2 === 0) {
+    return { icon: '🦠', text: 'Ammonia spike — first bacteria colony establishing. Cycle has begun!', color: '#ff6b6b' };
+  }
+  if (nh3 > 0 && no2 > 0) {
+    return { icon: '🔄', text: 'Both ammonia and nitrite present — mid-cycle. Nitrate should start climbing soon.', color: '#ffd166' };
+  }
+  return { icon: '🔬', text: 'Readings logged. Keep testing every 2–3 days.', color: '#a78bfa' };
+}
+
+// ── Render ────────────────────────────────────────────────
+function render() {
+  const sorted = [...readings].sort((a, b) => a.date.localeCompare(b.date));
+
+  // Labels — show as "Apr 22" style
+  const labels = sorted.map(r => {
+    const d = new Date(r.date + 'T00:00:00');
+    return d.toLocaleDateString('en-NZ', { day: 'numeric', month: 'short' });
+  });
+
+  cycleChart.data.labels = labels;
+  cycleChart.data.datasets[0].data = sorted.map(r => r.ammonia ?? null);
+  cycleChart.data.datasets[1].data = sorted.map(r => r.nitrite ?? null);
+  cycleChart.data.datasets[2].data = sorted.map(r => r.nitrate ?? null);
+  cycleChart.update();
+
+  phChart.data.labels = labels;
+  phChart.data.datasets[0].data = sorted.map(r => r.ph ?? null);
+  phChart.update();
+
+  // Phase banner
+  const phase = detectPhase(sorted);
+  document.getElementById('phase-icon').textContent = phase.icon;
+  document.getElementById('phase-text').textContent = phase.text;
+  if (phase.color) {
+    document.getElementById('phase-banner').style.borderColor = phase.color + '55';
+  }
+
+  // Table
+  const wrap = document.getElementById('table-wrap');
+  if (!sorted.length) {
+    wrap.innerHTML = '<div id="empty-state">No readings yet — add your first one above 🧪</div>';
+    return;
+  }
+
+  const rows = [...sorted].reverse().map((r, i) => {
+    const origIdx = readings.findIndex(x => x.id === r.id);
+    const d = new Date(r.date + 'T00:00:00');
+    const dateStr = d.toLocaleDateString('en-NZ', { weekday: 'short', day: 'numeric', month: 'short' });
+    return `<tr>
+      <td>${dateStr}</td>
+      <td class="ammonia">${r.ammonia != null ? r.ammonia + ' ppm' : '—'}</td>
+      <td class="nitrite">${r.nitrite != null ? r.nitrite + ' ppm' : '—'}</td>
+      <td class="nitrate">${r.nitrate != null ? r.nitrate + ' ppm' : '—'}</td>
+      <td class="ph">${r.ph != null ? r.ph : '—'}</td>
+      <td><button class="btn-del" data-id="${r.id}" title="Delete">✕</button></td>
+    </tr>`;
+  }).join('');
+
+  wrap.innerHTML = `<table>
+    <thead><tr>
+      <th>Date</th>
+      <th style="color:var(--ammonia)">Ammonia</th>
+      <th style="color:var(--nitrite)">Nitrite</th>
+      <th style="color:var(--nitrate)">Nitrate</th>
+      <th style="color:var(--ph)">pH</th>
+      <th></th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+
+  wrap.querySelectorAll('.btn-del').forEach(btn => {
+    btn.addEventListener('click', () => {
+      readings = readings.filter(r => r.id !== btn.dataset.id);
+      save(readings);
+      render();
+    });
+  });
+}
+
+// ── Set default date to today ─────────────────────────────
+function todayISO() {
+  const d = new Date();
+  return d.toISOString().split('T')[0];
+}
+document.getElementById('f-date').value = todayISO();
+
+// ── Add reading ───────────────────────────────────────────
+document.getElementById('btn-add').addEventListener('click', () => {
+  const date    = document.getElementById('f-date').value;
+  const ammonia = document.getElementById('f-ammonia').value;
+  const nitrite = document.getElementById('f-nitrite').value;
+  const nitrate = document.getElementById('f-nitrate').value;
+  const ph      = document.getElementById('f-ph').value;
+
+  if (!date) { alert('Please enter a date.'); return; }
+  if (ammonia === '' && nitrite === '' && nitrate === '' && ph === '') {
+    alert('Please enter at least one reading.'); return;
+  }
+
+  readings.push({
+    id:      Date.now().toString(),
+    date,
+    ammonia: ammonia !== '' ? parseFloat(ammonia) : null,
+    nitrite: nitrite !== '' ? parseFloat(nitrite) : null,
+    nitrate: nitrate !== '' ? parseFloat(nitrate) : null,
+    ph:      ph      !== '' ? parseFloat(ph)      : null,
+  });
+
+  save(readings);
+  render();
+
+  // Clear value fields but keep date
+  ['f-ammonia','f-nitrite','f-nitrate','f-ph'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('f-date').value = todayISO();
+});
+
+// ── Clear all ─────────────────────────────────────────────
+document.getElementById('btn-clear').addEventListener('click', () => {
+  if (confirm('Clear all readings? This cannot be undone.')) {
+    readings = [];
+    save(readings);
+    render();
+  }
+});
+
+// ── Initial render ────────────────────────────────────────
+render();
+</script>
+</body>
+</html>

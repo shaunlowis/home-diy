@@ -34,6 +34,10 @@ And lastly, this [white and black gravel](https://legacyaquatics.co.nz/product/a
 
 ![alt text](image-3.png)
 
+Getting all of this set up, means also checking the chlorination of the water. [Seachem Prime](https://legacyaquatics.co.nz/product/seachem-prime/) is industry standard.
+
+Lastly, the gold standard for water quality testing is the API Freshwater Master Test Kit. Contains everything 
+
 ### Fish and friends
 
 I really love the look of [this male doubletail betta](https://legacyaquatics.co.nz/product/male-doubletail-betta/):
@@ -76,15 +80,24 @@ They have a cool name, work hard and are chill little guys. I'll get the tank ac
 | JBL Manado Planting Substrate | $32.99 | $278.92 |
 | JBL Sansibar White 5KG | $36.99 | $315.91 |
 | Aqua One Mixed White + Black Gravel 2kg | $4.99 | $320.90 |
-| Blue Mystery Snail (x2) | $21.00 | $341.90 |
-| Driftwood (est. mid-range) | $40.00 | $381.90 |
-| Male Doubletail Betta | $49.99 | $431.89 |
-| Kuhli Loach | $10.99 | **$442.88** |
+| Seachem Prime | $16.99 | $337.89 |
+| API Freshwater Master Test Kit | $79.99 | $417.88 |
+| Blue Mystery Snail (x2) | $21.00 | $438.88 |
+| Driftwood (est. mid-range) | $40.00 | $478.88 |
+| Male Doubletail Betta | $49.99 | $528.87 |
+| Kuhli Loach | $10.99 | **$539.86** |
 
 The above costing is quite high, but this will be a bit of a journey over time building a beautiful natural system.
 
 ## Timeline
 
-I won't get all of the above items at once. Like I mentioned, I want to get the tank contents first. Then let it cycle for a bit, let the plants acclimate. Then I'll add the loach and the snails. Lastly, our betta boi!
+My best friend Claude made this summary timeline so my silly human brain won't forget my overall ordering of things. Thanks Claude!
 
-<iframe src="betta-timeline.html" width="100%" height="600" frameborder="0" style="border-radius:12px;"></iframe>
+<iframe src="betta-timeline.html" width="100%" height="1000" frameborder="0" style="border-radius:12px;"></iframe>
+
+## Water testing
+
+My best friend Claude made this little tool for me to chart the settling of my new tank! Thanks Claude!
+
+<iframe src="water-quality-tracker.html" width="100%" height="1000" 
+  frameborder="0" style="border-radius:12px;"></iframe>
