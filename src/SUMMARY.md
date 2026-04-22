@@ -21,3 +21,7 @@
 # Watch making
 
 - [Hardware, watchmaking: leather analog watch](watch_making/leather_analog/watch-making.md)
+
+# The Zoo
+
+- [Zoo, aquarium](aquarium/aquarium.md)
