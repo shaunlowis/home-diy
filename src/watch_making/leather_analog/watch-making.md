@@ -72,6 +72,20 @@ TOTAL = $18.56
 
 *Assembly notes, steps taken, any issues encountered go here.*
 
+I was originally inspired to do this project after watching this video:
+
+<div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:12px;">
+  <iframe
+    src="https://www.youtube.com/embed/v8GwzSTQTt8"
+    title="Watch build inspiration"
+    frameborder="0"
+    allowfullscreen
+    style="position:absolute; top:0; left:0; width:100%; height:100%;">
+  </iframe>
+</div>
+
+I'll be using Elliot's videos as a rough basis on construction, alongside his general tips!
+
 ## Final Product
 
 *Photos and reflections on the finished watch go here.*
