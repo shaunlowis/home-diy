@@ -99,5 +99,4 @@ My best friend Claude made this summary timeline so my silly human brain won't f
 
 My best friend Claude made this little tool for me to chart the settling of my new tank! Thanks Claude!
 
-<iframe src="water-quality-tracker.html" width="100%" height="1000" 
-  frameborder="0" style="border-radius:12px;"></iframe>
+<iframe src="water-quality-tracker.html" width="100%" height="1200" frameborder="0" style="border-radius:12px;"></iframe>
