@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Project Timeline</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:     #080f1c;
+    --bg2:    #0c1628;
+    --border: rgba(100,180,255,0.1);
+    --text:   #d6eaff;
+    --muted:  #4a7a9b;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Playfair Display', Georgia, serif;
+    min-height: 100vh;
+    padding: 40px 20px 60px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  header span { font-size: 36px; display: block; margin-bottom: 10px; }
+  header h1 {
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #e8f4ff;
+    margin-bottom: 6px;
+  }
+  header p {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+
+  .wrap { max-width: 1100px; margin: 0 auto; }
+
+  /* Category legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 28px;
+  }
+  .legend-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    letter-spacing: 0.04em;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .legend-item.dimmed { opacity: 0.25; }
+  .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Chart container */
+  #chart-wrap {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 16px 20px;
+    overflow-x: auto;
+  }
+
+  svg { display: block; }
+
+  /* D3 elements */
+  .grid-line { stroke: rgba(100,180,255,0.06); stroke-width: 1; }
+  .project-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    fill: #4a7a9b;
+    letter-spacing: 0.04em;
+  }
+  .axis-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    fill: #3a6080;
+  }
+  .project-line { stroke-width: 1.5; fill: none; opacity: 0.5; }
+  .commit-dot {
+    stroke: #080f1c;
+    stroke-width: 2;
+    cursor: pointer;
+    transition: r 0.15s;
+  }
+  .commit-dot:hover { r: 8; }
+
+  /* Tooltip */
+  #tooltip {
+    position: fixed;
+    background: #0d1a2e;
+    border: 1px solid rgba(100,180,255,0.2);
+    border-radius: 10px;
+    padding: 12px 16px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 100;
+    max-width: 260px;
+  }
+  #tooltip .tt-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+  #tooltip .tt-project {
+    font-size: 14px;
+    color: #e8f4ff;
+    margin-bottom: 3px;
+  }
+  #tooltip .tt-msg {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #8ab4cc;
+    line-height: 1.5;
+  }
+
+  /* Note */
+  .note {
+    margin-top: 18px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .note code {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 7px;
+    color: #7ab8d4;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .wrap > * { animation: fadeUp 0.5s ease both; }
+  .wrap > *:nth-child(1) { animation-delay: 0.05s; }
+  .wrap > *:nth-child(2) { animation-delay: 0.15s; }
+  .wrap > *:nth-child(3) { animation-delay: 0.25s; }
+</style>
+</head>
+<body>
+
+<header>
+  <span>🛠️</span>
+  <h1>Shaun's Tinkering Timeline</h1>
+  <p>Project activity over time · click legend to filter · hover nodes for details</p>
+</header>
+
+<div class="wrap">
+  <div class="legend" id="legend"></div>
+  <div id="chart-wrap"><svg id="chart"></svg></div>
+  <p class="note">
+    To update with real commit dates, run:
+    <code>git log --pretty=format:"%ad | %s" --date=short | sort</code>
+    and paste the output to Claude.
+  </p>
+</div>
+
+<div id="tooltip">
+  <div class="tt-date" id="tt-date"></div>
+  <div class="tt-project" id="tt-project"></div>
+  <div class="tt-msg" id="tt-msg"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  DATA  —  replace with your real git log output
+//  Format: { date: "YYYY-MM-DD", project: "key", msg: "commit message" }
+// ═══════════════════════════════════════════════════════
+const PROJECTS = {
+  "standing-desk":   { label: "Standing Desk",    category: "woodworking" },
+  "coffee-table":    { label: "Coffee Table",     category: "woodworking" },
+  "bedside-table":   { label: "Bedside Table",    category: "woodworking" },
+  "media-server":    { label: "Media Server",     category: "software"    },
+  "local-llm":       { label: "Local LLM",        category: "software"    },
+  "local-overleaf":  { label: "Local Overleaf",   category: "software"    },
+  "router":          { label: "Custom Router",    category: "electronics" },
+  "weather-station": { label: "Weather Station",  category: "electronics" },
+  "3d-printing":     { label: "3D Printer",       category: "3d-printing" },
+  "watch":           { label: "Watchmaking",      category: "making"      },
+  "aquarium":        { label: "Aquarium",         category: "zoo"         },
+};
+
+const CATEGORIES = {
+  "woodworking": { color: "#c47f2a", label: "Woodworking" },
+  "software":    { color: "#4a9eca", label: "Software"    },
+  "electronics": { color: "#06d6a0", label: "Electronics" },
+  "3d-printing": { color: "#a78bfa", label: "3D Printing" },
+  "making":      { color: "#ffd166", label: "Making"      },
+  "zoo":         { color: "#ff6b9d", label: "The Zoo"     },
+};
+
+// ── Real commit data from git log ──
+const COMMITS = [
+  // 2025-05-14 — repo kickoff
+  { date: "2025-05-14", project: "standing-desk",  msg: "standing desk project go" },
+  { date: "2025-05-14", project: "standing-desk",  msg: "organising" },
+  { date: "2025-05-14", project: "standing-desk",  msg: "fixing image paths" },
+  { date: "2025-05-14", project: "watch",          msg: "starter on watch" },
+
+  // 2025-05-16
+  { date: "2025-05-16", project: "watch",          msg: "new watch links" },
+  { date: "2025-05-16", project: "coffee-table",   msg: "new watch links" },
+
+  // 2025-05-17
+  { date: "2025-05-17", project: "watch",          msg: "latest finds" },
+  { date: "2025-05-17", project: "weather-station",msg: "oops, another project!" },
+
+  // 2025-05-21
+  { date: "2025-05-21", project: "watch",          msg: "typo" },
+
+  // 2025-05-25
+  { date: "2025-05-25", project: "media-server",   msg: "got a home file server running!" },
+
+  // 2025-05-26 — big restructure
+  { date: "2025-05-26", project: "standing-desk",  msg: "updated file structure" },
+  { date: "2025-05-26", project: "media-server",   msg: "updated file structure" },
+  { date: "2025-05-26", project: "watch",          msg: "updated file structure" },
+  { date: "2025-05-26", project: "weather-station",msg: "updated file structure" },
+  { date: "2025-05-26", project: "bedside-table",  msg: "updated file structure" },
+  { date: "2025-05-26", project: "coffee-table",   msg: "updated file structure" },
+
+  // 2025-06-02
+  { date: "2025-06-02", project: "media-server",   msg: "latest shenanigans" },
+
+  // 2025-06-26
+  { date: "2025-06-26", project: "3d-printing",    msg: "latest tinkering" },
+  { date: "2025-06-26", project: "media-server",   msg: "latest tinkering" },
+
+  // 2025-06-28
+  { date: "2025-06-28", project: "3d-printing",    msg: "added a logo and some 3d printing updates" },
+  { date: "2025-06-28", project: "media-server",   msg: "updated media server setup" },
+
+  // 2025-06-29
+  { date: "2025-06-29", project: "media-server",   msg: "Latest samba config" },
+
+  // 2025-07-13
+  { date: "2025-07-13", project: "3d-printing",    msg: "latest setup :)" },
+
+  // 2026-03-15 — big tinkering session
+  { date: "2026-03-15", project: "router",         msg: "some new tinkering!" },
+  { date: "2026-03-15", project: "weather-station",msg: "some new tinkering!" },
+  { date: "2026-03-15", project: "bedside-table",  msg: "some new tinkering!" },
+  { date: "2026-03-15", project: "coffee-table",   msg: "some new tinkering!" },
+  { date: "2026-03-15", project: "watch",          msg: "Oop, forgot to link it." },
+
+  // 2026-03-22
+  { date: "2026-03-22", project: "local-llm",      msg: "Preview of local LLM" },
+  { date: "2026-03-22", project: "local-llm",      msg: "Fixed links, added rendered output." },
+  { date: "2026-03-22", project: "local-overleaf", msg: "Fixed links, added rendered output." },
+  { date: "2026-03-22", project: "local-llm",      msg: "Latest tinkering!" },
+  { date: "2026-03-22", project: "local-overleaf", msg: "Latest tinkering!" },
+
+  // 2026-04-22 — today!
+  { date: "2026-04-22", project: "watch",          msg: "Watch bought!" },
+  { date: "2026-04-22", project: "watch",          msg: "Credit where credit is due!" },
+  { date: "2026-04-22", project: "aquarium",       msg: "Something is fishy..." },
+  { date: "2026-04-22", project: "aquarium",       msg: "Claude is helping me find the fishyness!" },
+  { date: "2026-04-22", project: "aquarium",       msg: "Slight resize on aquarium setup tracker" },
+];
+
+// ═══════════════════════════════════════════════════════
+//  CHART
+// ═══════════════════════════════════════════════════════
+const projectKeys  = Object.keys(PROJECTS);
+const categoryKeys = [...new Set(projectKeys.map(k => PROJECTS[k].category))];
+
+let hiddenCats = new Set();
+
+// Parse dates
+const parsed = COMMITS.map(c => ({ ...c, dateObj: new Date(c.date) }))
+  .sort((a, b) => a.dateObj - b.dateObj);
+
+const margin = { top: 20, right: 30, bottom: 50, left: 136 };
+const rowH   = 46;
+const height = projectKeys.length * rowH;
+
+function getWidth() {
+  const wrap = document.getElementById('chart-wrap');
+  return Math.max(680, wrap.clientWidth - 32 - margin.left - margin.right);
+}
+
+const svg = d3.select('#chart');
+const g   = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+// Scales
+const xScale = d3.scaleTime();
+const yScale = d3.scaleBand()
+  .domain(projectKeys)
+  .range([0, height])
+  .padding(0.3);
+
+// Axes groups
+const xAxisG = g.append('g').attr('class', 'x-axis');
+
+// Grid lines group
+const gridG = g.append('g').attr('class', 'grid');
+
+// Lines group (behind dots)
+const linesG = g.append('g').attr('class', 'lines');
+
+// Dots group
+const dotsG = g.append('g').attr('class', 'dots');
+
+// Y axis labels
+g.selectAll('.project-label')
+  .data(projectKeys)
+  .join('text')
+  .attr('class', 'project-label')
+  .attr('x', -10)
+  .attr('y', k => yScale(k) + yScale.bandwidth() / 2 + 4)
+  .attr('text-anchor', 'end')
+  .text(k => PROJECTS[k].label);
+
+// Horizontal row lines
+g.selectAll('.row-line')
+  .data(projectKeys)
+  .join('line')
+  .attr('class', 'grid-line')
+  .attr('x1', 0)
+  .attr('y1', k => yScale(k) + yScale.bandwidth() / 2)
+  .attr('y2', k => yScale(k) + yScale.bandwidth() / 2);
+
+// Tooltip
+const tooltip = document.getElementById('tooltip');
+
+function draw() {
+  const W = getWidth();
+  svg.attr('width', W + margin.left + margin.right)
+     .attr('height', height + margin.top + margin.bottom);
+
+  // Update row lines width
+  g.selectAll('.row-line').attr('x2', W);
+
+  // X scale
+  const dates = parsed.map(d => d.dateObj);
+  const xMin  = d3.timeMonth.offset(d3.min(dates), -1);
+  const xMax  = d3.timeMonth.offset(d3.max(dates),  1);
+  xScale.domain([xMin, xMax]).range([0, W]);
+
+  // X axis
+  xAxisG.attr('transform', `translate(0,${height})`)
+    .call(
+      d3.axisBottom(xScale)
+        .ticks(d3.timeMonth.every(2))
+        .tickFormat(d3.timeFormat('%b %y'))
+        .tickSize(-height)
+    );
+  xAxisG.selectAll('line').attr('class', 'grid-line').attr('stroke', 'rgba(100,180,255,0.06)');
+  xAxisG.selectAll('text').attr('class', 'axis-label').attr('dy', '1.4em');
+  xAxisG.select('.domain').remove();
+
+  // Filter visible commits
+  const visible = parsed.filter(d => !hiddenCats.has(PROJECTS[d.project]?.category));
+
+  // Draw connecting lines per project
+  linesG.selectAll('.project-line').remove();
+  projectKeys.forEach(key => {
+    if (hiddenCats.has(PROJECTS[key].category)) return;
+    const pts = visible.filter(d => d.project === key);
+    if (pts.length < 2) return;
+    const color = CATEGORIES[PROJECTS[key].category].color;
+    const line  = d3.line()
+      .x(d => xScale(d.dateObj))
+      .y(() => yScale(key) + yScale.bandwidth() / 2)
+      .curve(d3.curveMonotoneX);
+
+    linesG.append('path')
+      .datum(pts)
+      .attr('class', 'project-line')
+      .attr('stroke', color)
+      .attr('d', line);
+  });
+
+  // Draw dots
+  dotsG.selectAll('.commit-dot').remove();
+  dotsG.selectAll('.commit-dot')
+    .data(visible)
+    .join('circle')
+    .attr('class', 'commit-dot')
+    .attr('cx', d => xScale(d.dateObj))
+    .attr('cy', d => yScale(d.project) + yScale.bandwidth() / 2)
+    .attr('r', 5.5)
+    .attr('fill', d => CATEGORIES[PROJECTS[d.project].category].color)
+    .attr('stroke', '#080f1c')
+    .on('mousemove', (event, d) => {
+      const color = CATEGORIES[PROJECTS[d.project].category].color;
+      document.getElementById('tt-date').style.color = color;
+      document.getElementById('tt-date').textContent = d.date;
+      document.getElementById('tt-project').textContent = PROJECTS[d.project].label;
+      document.getElementById('tt-msg').textContent = d.msg;
+      tooltip.style.opacity = '1';
+      tooltip.style.left = (event.clientX + 14) + 'px';
+      tooltip.style.top  = (event.clientY - 10) + 'px';
+    })
+    .on('mouseleave', () => { tooltip.style.opacity = '0'; });
+}
+
+// ── Legend ──
+const legendEl = document.getElementById('legend');
+categoryKeys.forEach(cat => {
+  const { color, label } = CATEGORIES[cat];
+  const item = document.createElement('div');
+  item.className = 'legend-item';
+  item.style.background = color + '18';
+  item.style.borderColor = color + '44';
+  item.innerHTML = `<span class="legend-dot" style="background:${color}"></span>${label}`;
+  item.addEventListener('click', () => {
+    if (hiddenCats.has(cat)) {
+      hiddenCats.delete(cat);
+      item.classList.remove('dimmed');
+    } else {
+      hiddenCats.add(cat);
+      item.classList.add('dimmed');
+    }
+    draw();
+  });
+  legendEl.appendChild(item);
+});
+
+// ── Initial draw + resize ──
+draw();
+window.addEventListener('resize', draw);
+</script>
+</body>
+</html>
