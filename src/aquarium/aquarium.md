@@ -1,6 +1,6 @@
 # Overview
 
-A few years ago I had a betta fish briefly in a small aquarium. Let's build a natural tank that is nice and big, with plenty of room for a little guy/gal to thrive!
+A few years ago I had a betta fish briefly in a small aquarium. Let's build a natural tank that is nice and big, with plenty of room for a little guy to thrive!
 
 The plan is to buy the equipment and get the tank set up with natural plants first, let it acclimate for a month or so, then add our Betta alongside some companions. Initially, I thought shrimp would be nice to have, but these are banned in New Zealand! In stead, I'll get some snails and maybe a Kuhli loach.
 
@@ -26,17 +26,13 @@ Additionally, [this little thermometer](https://legacyaquatics.co.nz/product/gla
 
 Checking around online, [Anubias](https://legacyaquatics.co.nz/product/plant-anubias-nana/) sound like a good plant for bettas, so I'll get 2 of these. [Java fern](https://legacyaquatics.co.nz/product/plant-java-fern/) also looks great so I'll get one. Lastly, [Amazon Sword](https://legacyaquatics.co.nz/product/amazon-sword-live-plant/) is a really cool name, so I'll get one of these too.
 
-Now for soil and decor. For decor, a nice centrepiece of [driftwood](https://legacyaquatics.co.nz/product/driftwood/) would work great! For substrate, [a bag of soil](https://legacyaquatics.co.nz/product/jbl-manado-5l-planting-substrate-2/) is needed for our plants to have a good basis. A [bright, white sand](https://legacyaquatics.co.nz/product/jbl-sansibar-white-5kg/) would look great for topping:
+Now for soil and decor. For decor, a nice centrepiece of [driftwood](https://legacyaquatics.co.nz/product/driftwood/) would work great! For substrate, [a bag of soil](https://legacyaquatics.co.nz/product/jbl-manado-5l-planting-substrate-2/) is needed for our plants to have a good basis. A [lighter coloured sand](https://legacyaquatics.co.nz/product/pureaquarium-natural-sand-sandy-beige/) would look great for topping.
 
-![alt text](image-2.png)
+![alt text](image-4.png)
 
-And lastly, this [white and black gravel](https://legacyaquatics.co.nz/product/aqua-one-mixed-white-black-gravel-2kg/) would look great in our kitchen:
+Getting all of this set up, means also checking the chlorination of the water. [Seachem Prime](https://legacyaquatics.co.nz/product/seachem-prime/) is industry standard. Then getting good bacteria to flourish with a [bio starter](https://legacyaquatics.co.nz/product/aqua-one-bio-starter-150ml/) helps us get to the right place.
 
-![alt text](image-3.png)
-
-Getting all of this set up, means also checking the chlorination of the water. [Seachem Prime](https://legacyaquatics.co.nz/product/seachem-prime/) is industry standard.
-
-Lastly, the gold standard for water quality testing is the API Freshwater Master Test Kit. Contains everything 
+Lastly, the gold standard for water quality testing is the [API Freshwater Master Test Kit](https://legacyaquatics.co.nz/product/apifreshwatermastertestkit/). This is super pricey, but works out much less expensive than test dip kits over time.
 
 ### Fish and friends
 
@@ -69,6 +65,8 @@ They have a cool name, work hard and are chill little guys. I'll get the tank ac
 
 ## Cost
 
+New from store:
+
 | Item | Price (NZD) | Running total (NZD) |
 |------|-------------|---------------------|
 | Aqua One EcoStyle 42 Black 28L | $139.99 | $139.99 |
@@ -88,6 +86,33 @@ They have a cool name, work hard and are chill little guys. I'll get the tank ac
 | Kuhli Loach | $10.99 | **$539.86** |
 
 The above costing is quite high, but this will be a bit of a journey over time building a beautiful natural system.
+
+I managed to find a really great deal on a second hand fishtank! It was $70 for a tank, heater and thermostat! Then I got some potting soil from bunnings, which has so far worked great for only $7. This has taken a significant chunk off of the total remaining cost of the project. I'd highly recommend looking at second hand tanks to get started with and save costs.
+
+Second hand + Bunnings:
+
+| Item | Price (NZD) | Running total (NZD) |
+|------|-------------|---------------------|
+| Aqua One EcoStyle 47 39L + heater + thermometer (second hand) | $70.00 | $70.00 |
+| Potting soil (Bunnings) | $7.00 | **$77.00** |
+
+Remaining to buy new:
+
+| Item | Price (NZD) | Running total (NZD) |
+|------|-------------|---------------------|
+| Anubias Nana Live Plant (x2) | $39.98 | $39.98 |
+| Amazon Sword Live Plant | $13.99 | $53.97 |
+| Java Fern Live Plant | $16.99 | $70.96 |
+| PureAquarium Natural Sand Sandy Beige 2KG | $12.99 | $83.95 |
+| Seachem Prime | $16.99 | $100.94 |
+| Aqua One Bio Starter 150ml | $12.50 | $113.44 |
+| API Freshwater Master Test Kit | $79.99 | $193.43 |
+| Blue Mystery Snail (x2) | $21.00 | $214.43 |
+| Driftwood (est. mid-range) | $40.00 | $254.43 |
+| Male Doubletail Betta | $49.99 | $304.42 |
+| Kuhli Loach | $10.99 | **$315.41** |
+
+**Grand total: $392.41** vs $539.86 originally — saving $147.45!
 
 ## Timeline
 
