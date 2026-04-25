@@ -21,6 +21,7 @@
     --nitrite:   #ffd166;
     --nitrate:   #06d6a0;
     --ph:        #a78bfa;
+    --dkh:       #f4a261;
     --card-bg:   rgba(255,255,255,0.03);
   }
 
@@ -152,6 +153,7 @@
   .field.nitrite  label { color: var(--nitrite);  }
   .field.nitrate  label { color: var(--nitrate);  }
   .field.ph       label { color: var(--ph);       }
+  .field.dkh      label { color: var(--dkh);      }
   .field.date     label { color: var(--muted);    }
 
   .field input {
@@ -170,9 +172,7 @@
   .field input:focus { border-color: rgba(100,180,255,0.35); }
   .field input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.5); }
 
-  .form-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-
-  button {
+  #btn-refresh {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
     letter-spacing: 0.07em;
@@ -181,20 +181,11 @@
     padding: 10px 20px;
     cursor: pointer;
     transition: opacity 0.2s, transform 0.15s;
-  }
-  button:hover { opacity: 0.85; transform: translateY(-1px); }
-  button:active { transform: translateY(0); }
-
-  #btn-add {
     background: linear-gradient(135deg, #2a6fa8, #1a4f7a);
     color: #e8f4ff;
     border: 1px solid rgba(100,180,255,0.3);
   }
-  #btn-clear {
-    background: rgba(255,255,255,0.05);
-    color: var(--muted);
-    border: 1px solid var(--border);
-  }
+  #btn-refresh:hover { opacity: 0.85; transform: translateY(-1px); }
 
   /* ── Log table ── */
   .log-card {
@@ -241,6 +232,7 @@
   td.nitrite  { color: var(--nitrite); }
   td.nitrate  { color: var(--nitrate); }
   td.ph       { color: var(--ph); }
+  td.dkh      { color: var(--dkh); }
 
   .btn-del {
     background: none;
@@ -350,6 +342,11 @@
       <div class="guide-range">Target: 6.8 – 7.4</div>
       <div class="guide-note">Betta ideal range</div>
     </div>
+    <div class="guide-item" style="--c: var(--dkh)">
+      <div class="guide-name">Hardness (dKH)</div>
+      <div class="guide-range">Target: 3 – 8 dKH</div>
+      <div class="guide-note">Soft to moderately hard</div>
+    </div>
   </div>
 
   <!-- Charts -->
@@ -378,35 +375,20 @@
     </div>
   </div>
 
-  <!-- Entry form -->
+  <!-- Instructions card -->
   <div class="form-card">
-    <h2>Log a Reading</h2>
-    <div class="form-grid">
-      <div class="field date">
-        <label>Date</label>
-        <input type="date" id="f-date" />
-      </div>
-      <div class="field ammonia">
-        <label>Ammonia (ppm)</label>
-        <input type="number" id="f-ammonia" min="0" max="8" step="0.25" placeholder="e.g. 0.25" />
-      </div>
-      <div class="field nitrite">
-        <label>Nitrite (ppm)</label>
-        <input type="number" id="f-nitrite" min="0" max="5" step="0.25" placeholder="e.g. 0.5" />
-      </div>
-      <div class="field nitrate">
-        <label>Nitrate (ppm)</label>
-        <input type="number" id="f-nitrate" min="0" max="160" step="1" placeholder="e.g. 5" />
-      </div>
-      <div class="field ph">
-        <label>pH</label>
-        <input type="number" id="f-ph" min="5" max="9" step="0.1" placeholder="e.g. 7.2" />
-      </div>
+    <h2>Adding Readings</h2>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8ab4cc;line-height:1.9;">
+      Edit <span style="color:#e8f4ff;">water-log.csv</span> directly in any text editor and refresh this page.<br>
+      Columns: <span style="color:var(--ammonia)">date</span> · <span style="color:var(--ammonia)">ammonia</span> · <span style="color:var(--nitrite)">nitrite</span> · <span style="color:var(--nitrate)">nitrate</span> · <span style="color:var(--ph)">ph</span> · <span style="color:var(--dkh)">dkh</span><br>
+      Leave a cell empty if you didn't measure that value.
+    </p>
+    <div style="margin-top:14px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:14px 16px;">
+      <pre style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#5a8ab0;margin:0;line-height:1.7;">date,ammonia,nitrite,nitrate,ph,dkh
+2026-04-22,0.5,0,0,7.3,3
+2026-04-25,0.5,,,,</pre>
     </div>
-    <div class="form-actions">
-      <button id="btn-add">＋ Add Reading</button>
-      <button id="btn-clear">Clear All Data</button>
-    </div>
+    <button id="btn-refresh" style="margin-top:14px;">↻ Refresh Data</button>
   </div>
 
   <!-- Log table -->
@@ -418,20 +400,37 @@
 </div>
 
 <script>
-// ── Storage ──────────────────────────────────────────────
-const STORAGE_KEY = 'betta_water_log';
+// ── Fetch & parse CSV ─────────────────────────────────────
+const CSV_FILE = 'water-log.csv';
 
-function load() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch { return []; }
+async function loadCSV() {
+  try {
+    const res = await fetch(CSV_FILE);
+    if (!res.ok) throw new Error(`Could not load ${CSV_FILE} (${res.status})`);
+    const text = await res.text();
+    return parseCSV(text);
+  } catch (err) {
+    document.getElementById('phase-text').textContent = `⚠️ ${err.message} — make sure water-log.csv is in the same folder.`;
+    return [];
+  }
 }
-function save(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n').filter(l => l.trim());
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+  return lines.slice(1).map((line, i) => {
+    const vals = line.split(',');
+    const obj = { id: String(i) };
+    headers.forEach((h, j) => {
+      const v = vals[j]?.trim();
+      obj[h] = (v === '' || v == null) ? null : (h === 'date' ? v : parseFloat(v));
+    });
+    return obj;
+  });
 }
 
-let readings = load();
-
-// ── Chart setup ──────────────────────────────────────────
+// ── Chart setup ───────────────────────────────────────────
 const gridColor = 'rgba(100,180,255,0.07)';
 const tickColor = '#3a6a9a';
 
@@ -511,6 +510,13 @@ const phChart = new Chart(phCtx, {
       pointBackgroundColor: '#a78bfa', pointBorderColor: '#080f1c', pointBorderWidth: 2,
       backgroundColor: makeGradient(phCtx, '#a78bfa'),
       fill: true, tension: 0.35,
+    },
+    {
+      label: 'Hardness', data: [],
+      borderColor: '#f4a261', borderWidth: 2, pointRadius: 4,
+      pointBackgroundColor: '#f4a261', pointBorderColor: '#080f1c', pointBorderWidth: 2,
+      backgroundColor: makeGradient(phCtx, '#f4a261'),
+      fill: true, tension: 0.35,
     }
   ]},
   options: {
@@ -519,46 +525,35 @@ const phChart = new Chart(phCtx, {
       ...sharedOptions.scales,
       y: {
         ...sharedOptions.scales.y,
-        min: 6.0, max: 8.5,
-        ticks: { ...sharedOptions.scales.y.ticks, stepSize: 0.5 },
+        min: 0, max: 14,
+        ticks: { ...sharedOptions.scales.y.ticks, stepSize: 2 },
       }
-    },
-    plugins: {
-      ...sharedOptions.plugins,
-      annotation: undefined,
     }
   }
 });
 
 // ── Phase detection ───────────────────────────────────────
 function detectPhase(readings) {
-  if (!readings.length) return { icon: '💧', text: 'Add your first reading to begin tracking' };
-
+  if (!readings.length) return { icon: '💧', text: 'Import or add your first reading to begin tracking' };
   const last = readings[readings.length - 1];
   const nh3 = parseFloat(last.ammonia);
   const no2 = parseFloat(last.nitrite);
   const no3 = parseFloat(last.nitrate);
-
-  if (nh3 === 0 && no2 === 0 && no3 > 0) {
+  if (nh3 === 0 && no2 === 0 && no3 > 0)
     return { icon: '🐠', text: 'Cycle complete! Ammonia & nitrite at 0. Your tank is ready for fish!', color: '#06d6a0' };
-  }
-  if (no2 > 0 && nh3 < no2) {
+  if (no2 > 0 && nh3 < no2)
     return { icon: '⚗️', text: 'Nitrite spike in progress — bacteria converting NH₃ → NO₂ → NO₃. Stay patient!', color: '#ffd166' };
-  }
-  if (nh3 > 0 && no2 === 0) {
+  if (nh3 > 0 && no2 === 0)
     return { icon: '🦠', text: 'Ammonia spike — first bacteria colony establishing. Cycle has begun!', color: '#ff6b6b' };
-  }
-  if (nh3 > 0 && no2 > 0) {
+  if (nh3 > 0 && no2 > 0)
     return { icon: '🔄', text: 'Both ammonia and nitrite present — mid-cycle. Nitrate should start climbing soon.', color: '#ffd166' };
-  }
   return { icon: '🔬', text: 'Readings logged. Keep testing every 2–3 days.', color: '#a78bfa' };
 }
 
 // ── Render ────────────────────────────────────────────────
-function render() {
+function render(readings = []) {
   const sorted = [...readings].sort((a, b) => a.date.localeCompare(b.date));
 
-  // Labels — show as "Apr 22" style
   const labels = sorted.map(r => {
     const d = new Date(r.date + 'T00:00:00');
     return d.toLocaleDateString('en-NZ', { day: 'numeric', month: 'short' });
@@ -572,25 +567,21 @@ function render() {
 
   phChart.data.labels = labels;
   phChart.data.datasets[0].data = sorted.map(r => r.ph ?? null);
+  phChart.data.datasets[1].data = sorted.map(r => r.dkh ?? null);
   phChart.update();
 
-  // Phase banner
   const phase = detectPhase(sorted);
   document.getElementById('phase-icon').textContent = phase.icon;
   document.getElementById('phase-text').textContent = phase.text;
-  if (phase.color) {
-    document.getElementById('phase-banner').style.borderColor = phase.color + '55';
-  }
+  if (phase.color) document.getElementById('phase-banner').style.borderColor = phase.color + '55';
 
-  // Table
   const wrap = document.getElementById('table-wrap');
   if (!sorted.length) {
-    wrap.innerHTML = '<div id="empty-state">No readings yet — add your first one above 🧪</div>';
+    wrap.innerHTML = '<div id="empty-state">No readings yet — add one above or import a CSV 🧪</div>';
     return;
   }
 
-  const rows = [...sorted].reverse().map((r, i) => {
-    const origIdx = readings.findIndex(x => x.id === r.id);
+  const rows = [...sorted].reverse().map(r => {
     const d = new Date(r.date + 'T00:00:00');
     const dateStr = d.toLocaleDateString('en-NZ', { weekday: 'short', day: 'numeric', month: 'short' });
     return `<tr>
@@ -599,6 +590,7 @@ function render() {
       <td class="nitrite">${r.nitrite != null ? r.nitrite + ' ppm' : '—'}</td>
       <td class="nitrate">${r.nitrate != null ? r.nitrate + ' ppm' : '—'}</td>
       <td class="ph">${r.ph != null ? r.ph : '—'}</td>
+      <td class="dkh">${r.dkh != null ? r.dkh + ' dKH' : '—'}</td>
       <td><button class="btn-del" data-id="${r.id}" title="Delete">✕</button></td>
     </tr>`;
   }).join('');
@@ -610,6 +602,7 @@ function render() {
       <th style="color:var(--nitrite)">Nitrite</th>
       <th style="color:var(--nitrate)">Nitrate</th>
       <th style="color:var(--ph)">pH</th>
+      <th style="color:var(--dkh)">Hardness</th>
       <th></th>
     </tr></thead>
     <tbody>${rows}</tbody>
@@ -618,62 +611,20 @@ function render() {
   wrap.querySelectorAll('.btn-del').forEach(btn => {
     btn.addEventListener('click', () => {
       readings = readings.filter(r => r.id !== btn.dataset.id);
-      save(readings);
       render();
     });
   });
 }
 
-// ── Set default date to today ─────────────────────────────
-function todayISO() {
-  const d = new Date();
-  return d.toISOString().split('T')[0];
+// ── Init & refresh ────────────────────────────────────────
+async function init() {
+  const data = await loadCSV();
+  render(data);
 }
-document.getElementById('f-date').value = todayISO();
 
-// ── Add reading ───────────────────────────────────────────
-document.getElementById('btn-add').addEventListener('click', () => {
-  const date    = document.getElementById('f-date').value;
-  const ammonia = document.getElementById('f-ammonia').value;
-  const nitrite = document.getElementById('f-nitrite').value;
-  const nitrate = document.getElementById('f-nitrate').value;
-  const ph      = document.getElementById('f-ph').value;
-
-  if (!date) { alert('Please enter a date.'); return; }
-  if (ammonia === '' && nitrite === '' && nitrate === '' && ph === '') {
-    alert('Please enter at least one reading.'); return;
-  }
-
-  readings.push({
-    id:      Date.now().toString(),
-    date,
-    ammonia: ammonia !== '' ? parseFloat(ammonia) : null,
-    nitrite: nitrite !== '' ? parseFloat(nitrite) : null,
-    nitrate: nitrate !== '' ? parseFloat(nitrate) : null,
-    ph:      ph      !== '' ? parseFloat(ph)      : null,
-  });
-
-  save(readings);
-  render();
-
-  // Clear value fields but keep date
-  ['f-ammonia','f-nitrite','f-nitrate','f-ph'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('f-date').value = todayISO();
-});
-
-// ── Clear all ─────────────────────────────────────────────
-document.getElementById('btn-clear').addEventListener('click', () => {
-  if (confirm('Clear all readings? This cannot be undone.')) {
-    readings = [];
-    save(readings);
-    render();
-  }
-});
-
-// ── Initial render ────────────────────────────────────────
-render();
+document.getElementById('btn-refresh').addEventListener('click', init);
+init();
 </script>
+
 </body>
 </html>

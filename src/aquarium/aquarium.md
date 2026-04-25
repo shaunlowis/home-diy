@@ -4,7 +4,7 @@ A few years ago I had a betta fish briefly in a small aquarium. Let's build a na
 
 The plan is to buy the equipment and get the tank set up with natural plants first, let it acclimate for a month or so, then add our Betta alongside some companions. Initially, I thought shrimp would be nice to have, but these are banned in New Zealand! In stead, I'll get some snails and maybe a Kuhli loach.
 
-## Equipment
+## Planning
 
 ### Tank
 
@@ -125,3 +125,15 @@ My best friend Claude made this summary timeline so my silly human brain won't f
 My best friend Claude made this little tool for me to chart the settling of my new tank! Thanks Claude!
 
 <iframe src="water-quality-tracker.html" width="100%" height="1200" frameborder="0" style="border-radius:12px;"></iframe>
+
+## The real deal
+
+I started my fish tank! So far I've put in a central driftwood piece and am very happy with it:
+
+![alt text](20260424_184851.jpg)
+
+Alongside two mystery snails:
+
+![alt text](20260425_114952.jpg)
+
+These little fellas are so active and incredibly entertaining. I've used Seachem Betta Basics to get the tank set up with.
