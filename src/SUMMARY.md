@@ -25,3 +25,7 @@
 # The Zoo
 
 - [Zoo, aquarium](aquarium/aquarium.md)
+
+# Creative stuff
+
+- [Creative, sketching](drawing/drawing.md)
