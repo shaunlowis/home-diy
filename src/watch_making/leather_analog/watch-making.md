@@ -68,9 +68,19 @@ TOTAL = $18.56
 
 *Parts arriving — notes and first impressions go here.*
 
+All the parts look great! Everything was very well packaged!
+
+![alt text](20260430_174659-2.jpg)
+
 ## Construction
 
 *Assembly notes, steps taken, any issues encountered go here.*
+
+The skeleton movement I have makes assembly quite different to other watches I've seen. Removing the stem from this movement was done by pressing down on this button:
+
+![alt text](20260430_183931.jpg)
+
+Unfortunately, this skeleton movement doesn't fit in my case. It also seems like it loses power very very quickly. Overall, it looks like this purchase was a bit of a bust. Luckily, the rest of my supplies look great for the watch and I'm going to in stead buy an [NH35 movement](https://www.aliexpress.com/item/1005008494235697.html?spm=a2g0o.productlist.main.2.2647b8f1FAZGuZ&algo_pvid=cf6cb956-dbdd-4ee3-85ea-b4ae73215bc5&pdp_ext_f=%7B%22order%22%3A%225469%22%2C%22spu_best_type%22%3A%22price%22%2C%22eval%22%3A%221%22%2C%22fromPage%22%3A%22search%22%7D&utparam-url=scene%3Asearch%7Cquery_from%3A%7Cx_object_id%3A1005008494235697%7C_p_origin_prod%3A#nav-description). The link is for an NH35A, but this is the same as an NH35.
 
 I was originally inspired to do this project after watching this video:
 
@@ -83,8 +93,6 @@ I was originally inspired to do this project after watching this video:
     style="position:absolute; top:0; left:0; width:100%; height:100%;">
   </iframe>
 </div>
-
-I'll be using Elliot's videos as a rough basis on construction, alongside his general tips!
 
 ## Final Product
 
