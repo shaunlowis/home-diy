@@ -114,12 +114,6 @@ Remaining to buy new:
 
 **Grand total: $392.41** vs $539.86 originally — saving $147.45!
 
-## Timeline
-
-My best friend Claude made this summary timeline so my silly human brain won't forget my overall ordering of things. Thanks Claude!
-
-<iframe src="betta-timeline.html" width="100%" height="1000" frameborder="0" style="border-radius:12px;"></iframe>
-
 ## Water testing
 
 My best friend Claude made this little tool for me to chart the settling of my new tank! Thanks Claude!
@@ -127,6 +121,8 @@ My best friend Claude made this little tool for me to chart the settling of my n
 <iframe src="water-quality-tracker.html" width="100%" height="1200" frameborder="0" style="border-radius:12px;"></iframe>
 
 ## The real deal
+
+### A simple start
 
 I started my fish tank! So far I've put in a central driftwood piece and am very happy with it:
 
@@ -136,4 +132,12 @@ Alongside two mystery snails:
 
 ![alt text](20260425_114952.jpg)
 
-These little fellas are so active and incredibly entertaining. I've used Seachem Betta Basics to get the tank set up with.
+These little fellas are so active and incredibly entertaining. I've used Seachem Betta Basics to get the tank set up with. Additionally, I added Seachem Prime and Stability and am letting the tank cycle. I have 5 plants to start out with.
+
+### New friends
+
+I decided to get Albino Pygmy Corydoras because they are absolutely adorable! I got two new rocks, some more plants and some java moss, which I stuck in the driftwood. For now, I am staying to 3 Pygmy Corydoras only because I wanted to make sure the tank is acclimated and cycled.
+
+Before getting the fish, I did a full water quality test and everything looked good! Will hold and see how these little guys do.
+
+![alt text](20260502_145549.jpg) ![alt text](20260502_145545.jpg) ![alt text](20260502_144312.jpg)
